@@ -1,6 +1,7 @@
 # showhws
 USE:
-used for displaying minimum hw info of a linux system in shell 
+used for displaying minimum hw info of a linux system in shell
+--------------
 Building
 --------
 run make 
