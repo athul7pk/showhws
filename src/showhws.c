@@ -1,6 +1,6 @@
 #include "showhws.h"
-int MAX_WIDTH = (70);
-int MAX_HEIGHT = (70);
+int MAX_WIDTH = (173);
+int MAX_HEIGHT = (34);
 
 int num_cpus = 8;
 void gotoxy(int x, int y)
@@ -68,6 +68,7 @@ void draw_package(cpuinfo_t *pcpu)
     if (prev_x >= (MAX_WIDTH / 6) * PROCESSOR_W)
     {
         printf("Redraw,Error many CPUs\r\n");
+        exit(1);
     }
 }
 void exit_handler(){
@@ -88,8 +89,8 @@ int main(int argc, char *argv[])
     signal(SIGHUP,exit_handler);
     atexit(exit_handler);
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    MAX_HEIGHT = w.ws_row;
-    MAX_WIDTH = w.ws_col - 20;
+//    MAX_HEIGHT = w.ws_row;
+  //  MAX_WIDTH = w.ws_col - 20;
     draw_sqr(0, 0, MAX_WIDTH, MAX_HEIGHT, WHITE);
     draw_total_ram();
     num_cpus = get_nprocs_conf();
