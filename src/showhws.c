@@ -9,7 +9,7 @@ void gotoxy(int x, int y)
 }
 void draw_total_ram()
 {
-    gotoxy(1, 2);
+    gotoxy(1, 0);
     printf("\e[48;5;25mRAM %d KB \e[0m", get_ram_info());
 }
 //void draw_
@@ -39,13 +39,10 @@ cpuinfo_t *cpus;
 
 void draw_package(cpuinfo_t *pcpu)
 {
-#define PROCESSOR_W 14
-#define PROCESSOR_H 17
-#define CORE_W (PROCESSOR_W - 2)
-#define CORE_H (PROCESSOR_H / 5)
+
 
     gotoxy(prev_x, PROCESSOR_H + 4);
-    printf("\e[5m%.2fMhz\e[0m", pcpu->clock);
+    printf("%.2fMhz\e[0m", pcpu->clock);
 
     draw_sqr(prev_x, prev_y, PROCESSOR_W, PROCESSOR_H, BROWN); //main box Processor
     draw_sqr(prev_x + 1, PROCESSOR_H, CORE_W, CORE_H, GREEN);  //cpu core
@@ -73,12 +70,23 @@ void draw_package(cpuinfo_t *pcpu)
         printf("Redraw,Error many CPUs\r\n");
     }
 }
+void exit_handler(){
+    gotoxy(0, 0);
+    system("clear");
+    printf("\e[0m\r\n");
+    exit(1);
+}
 int main(int argc, char *argv[])
 {
 
     int i = 0, j = 0;
 
     struct winsize w;
+    signal(SIGINT,exit_handler);
+    signal(SIGQUIT,exit_handler);
+    signal(SIGKILL,exit_handler);
+    signal(SIGHUP,exit_handler);
+    atexit(exit_handler);
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     MAX_HEIGHT = w.ws_row;
     MAX_WIDTH = w.ws_col - 20;
@@ -111,7 +119,9 @@ int main(int argc, char *argv[])
 
    
     list_nw_ifaces();
+    show_cpu_usage(num_cpus);
     gotoxy(0, MAX_HEIGHT);
+    
     exit(0);
     while (i++ < 255)
     {
